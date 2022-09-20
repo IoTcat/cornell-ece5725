@@ -11,6 +11,9 @@
 # on the PiTFT screen.
 
 # Start video_control python script in the background
-/usr/bin/python3 $1 &
+if [ $# -gt 0 ];
+then 
+    /usr/bin/python3 $1 &
+fi
 # Start mplayer in the foreground
 sudo SDL_VIDEODRIVER=fbcon SDL_FBDEV=/dev/fb0 mplayer -input file=test_fifo -vo sdl -framedrop bigbuckbunny320p.mp4
