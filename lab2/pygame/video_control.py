@@ -5,6 +5,10 @@
 # Group Number: 7
 # Created Date: 9/7/2022
 # 
+
+
+
+
 """Description:
 The Lab Code for ECE5725 Lab1 Week2 Step6.
 A python routine sending commands to mplayer when the corresponding 
