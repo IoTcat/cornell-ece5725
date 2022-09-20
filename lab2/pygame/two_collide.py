@@ -1,19 +1,23 @@
-import pygame     # Import pygame graphics library
-import os    # for OS calls
-import time 
+
+import os
+import sys
+sys.path.append('modules/display')
+
 import numpy as np
-from col import col
+import RPi.GPIO as GPIO
+import pygame
+
+from screen import Screen
+from ball import Ball
 
 os.putenv('SDL_VIDEODRIVER', 'fbcon')
 os.putenv('SDL_FBDEV', '/dev/fb0')
 
-COL_LOCK = 0
 IS_QUIT = False
 def cb(a):
     global IS_QUIT
     IS_QUIT = True
 
-import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -21,63 +25,35 @@ GPIO.add_event_detect(27, GPIO.FALLING, callback=cb, bouncetime=300)
 
 
 pygame.init()
-
 clock = pygame.time.Clock()
 
-size = width, height = 320, 240 
-speed = np.array([2,2])
-speed2 = np.array([1,-2])
-black = 0, 0, 0
-screen = pygame.display.set_mode(size)
-ball = pygame.image.load("ball1.png")
-ball = pygame.transform.scale(ball, (120, 120))
-ball2 = pygame.transform.scale(ball, (60,60))
-ballrect = ball.get_rect()#.inflate(-2, -2)
-ballrect2 = ball2.get_rect()#.inflate(-10, -10)
+screen = Screen(width = 320, height = 240)
+ball = [
+    Ball(speed = [2,2], radius = 50),
+    Ball(speed = [1,-2], radius = 20)
+]
 
-ballrect2 = ballrect2.move([160,160])    
+
+ball[1].move([160,160])    
 
 while not IS_QUIT:    
-    clock.tick(100)
-    ballrect = ballrect.move(speed.astype(int))    
-    ballrect2 = ballrect2.move(speed2.astype(int))    
+    clock.tick(100) 
 
-    COL_LOCK -= 1
+    ball[0].move()
+    ball[1].move()
 
-    if COL_LOCK <= 0 and pygame.Rect.colliderect(ballrect, ballrect2):
-        speed, speed2 = col({
-                'v': speed,
-                'r': np.array([ballrect.x, ballrect.y])
-            }, {
-                'v': speed2,
-                'r': np.array([ballrect2.x, ballrect2.y])
-            }, 3, 1)
+    # If two ball overlap
+    if ball[0] - ball[1] < ball[0].radius + ball[1].radius:
+        # Do the collidsion
+        ball[0] ** ball[1]
 
-        ballrect = ballrect.move(speed.astype(int)*5)    
-        ballrect2 = ballrect2.move(speed2.astype(int)*5)    
+    screen.constrain(ball[0])
+    screen.constrain(ball[1])
 
-        COL_LOCK = 10
-    else:
-        if ballrect.left < 0 or ballrect.right > width:        
-            speed[0] = -speed[0]    
-            ballrect = ballrect.move(speed*5)    
-            ballrect2 = ballrect2.move(speed2*5)    
-        if ballrect.top < 0 or ballrect.bottom > height:        
-            speed[1] = -speed[1]
-            ballrect = ballrect.move(speed*5)    
-            ballrect2 = ballrect2.move(speed2*5)    
-        if ballrect2.left < 0 or ballrect2.right > width:        
-            speed2[0] = -speed2[0]    
-            ballrect = ballrect.move(speed*5)    
-            ballrect2 = ballrect2.move(speed2*5)    
-        if ballrect2.top < 0 or ballrect2.bottom > height:        
-            speed2[1] = -speed2[1]
-            ballrect = ballrect.move(speed*5)    
-            ballrect2 = ballrect2.move(speed2*5)    
 
-    screen.fill(black)               # Erase the Work space
-    screen.blit(ball, ballrect)   # Combine Ball surface with workspace surface
 
-    screen.blit(ball2, ballrect2)   # Combine Ball surface with workspace surface
+    screen.clear()
+    screen << ball[0]
+    screen << ball[1]
     pygame.display.flip()        # display workspace on screen
 
