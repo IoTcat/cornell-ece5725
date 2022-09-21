@@ -1,27 +1,26 @@
 
+
+
+FPS = 100
+
+
 import os
 import sys
 sys.path.append('modules/display')
+sys.path.append('modules/gpio')
 
 import numpy as np
-import RPi.GPIO as GPIO
 import pygame
 
 from screen import Screen
 from ball import Ball
+from button import Button
 
 os.putenv('SDL_VIDEODRIVER', 'fbcon')
 os.putenv('SDL_FBDEV', '/dev/fb0')
 
-IS_QUIT = False
-def cb(a):
-    global IS_QUIT
-    IS_QUIT = True
 
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(27, GPIO.FALLING, callback=cb, bouncetime=300)
+button_quit = Button(27)
 
 
 pygame.init()
@@ -36,8 +35,8 @@ ball = [
 
 ball[1].move([160,160])    
 
-while not IS_QUIT:    
-    clock.tick(100) 
+while not button_quit.cnt:    
+    clock.tick(FPS) 
 
     ball[0].move()
     ball[1].move()
@@ -49,7 +48,6 @@ while not IS_QUIT:
 
     screen.constrain(ball[0])
     screen.constrain(ball[1])
-
 
 
     screen.clear()
