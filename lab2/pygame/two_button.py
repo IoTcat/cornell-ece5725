@@ -34,7 +34,7 @@ button_quit = Button(27)
 pygame.init()
 pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()
-banner = Text(text='i', position = [160,50])
+banner = Text(text='', position = [160,50])
 screen = Screen(width = 320, height = 240)
 ball = [
     Ball(speed = [2,2], radius = 50),
@@ -56,7 +56,6 @@ vbutton2 = VButton(
 ball[1].move([160,160])    
 
 while not button_quit.cnt:    
-    print('ff')
     clock.tick(FPS) 
 
 
