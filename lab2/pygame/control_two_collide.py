@@ -1,6 +1,8 @@
 
 FPS = 100
 
+import time
+START_TIME = time.time()
 
 import os
 import sys
@@ -36,7 +38,7 @@ last_click_time = 0
 pygame.init()
 pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()
-banner = Text(text='i', position = [160,50])
+banner = Text(text='', position = [160,50])
 screen = Screen(width = 320, height = 240)
 ball = [
     Ball(speed = [2,2], radius = 50),
@@ -82,7 +84,7 @@ back_button = VButton(
 ball[1].move([160,160])    
 
 
-while not button_quit.cnt:    
+while not button_quit.cnt and time.time()<START_TIME+300:    
     clock.tick(FPS) 
 
 
@@ -136,14 +138,18 @@ while not button_quit.cnt:
             elif (vbutton2.rect.collidepoint(pos) and start_flag == False):
                 start_flag = True
             elif (pause_button.rect.collidepoint(pos) and start_flag == True and pause_flag == True):
-                button_quit.plus()
+                pause_flag = False
             elif (pause_button.rect.collidepoint(pos) and start_flag == True and pause_flag == False):
                 pause_flag = True
 
             elif (fast_button.rect.collidepoint(pos) and start_flag == True):
                 FPS = FPS + 50
             elif (slow_button.rect.collidepoint(pos) and start_flag == True):
-                FPS = FPS - 50
+                FPS = max(FPS-50, 5)
+#                if ball.speed[0] >= 50:
+#                    ball.speed[0] = ball.speed[0] - 50
+#                if ball.speed[1] >= 50:
+#                    ball.speed[1] = ball.speed[1] - 50
             elif (back_button.rect.collidepoint(pos) and start_flag == True):
                 start_flag = False
                 FPS = 100

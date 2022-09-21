@@ -1,6 +1,8 @@
 
 FPS = 100
 
+import time
+START_TIME = time.time()
 
 import os
 import sys
@@ -50,7 +52,7 @@ banner = Text(text='', position = [160,50])
 
 ball[1].move([160,160])    
 
-while not button_quit.cnt:    
+while not button_quit.cnt and time.time()<START_TIME+30:    
     clock.tick(FPS) 
 
 

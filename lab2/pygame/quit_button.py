@@ -4,6 +4,9 @@ FPS = 100
 
 import os
 import sys
+import time
+START_TIME = time.time()
+
 sys.path.append('modules/display')
 sys.path.append('modules/gpio')
 sys.path.append('modules/sys')
@@ -48,7 +51,7 @@ vbutton = VButton(
 
 ball[1].move([160,160])    
 
-while not button_quit.cnt:    
+while not button_quit.cnt and time.time()<START_TIME+30:    
     print('ff')
     clock.tick(FPS) 
 
