@@ -15,6 +15,9 @@ class Button():
         GPIO.add_event_detect(self.pin, GPIO.FALLING, callback=self.__callback, bouncetime=300)
 
     def __callback(self, a):
-        self.cnt += 1
+        self.plus()
         self.func(a)
+
+    def plus(self):
+        self.cnt += 1
 
