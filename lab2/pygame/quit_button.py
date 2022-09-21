@@ -10,7 +10,7 @@ sys.path.append('modules/sys')
 
 import numpy as np
 import pygame
-
+from pygame.locals import *   # for event MOUSE variables
 from screen import Screen
 from ball import Ball
 from button import Button
@@ -27,10 +27,11 @@ os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
 
 button_quit = Button(27)
 
-timeout(30, button_quit.plus)
+# timeout(30, button_quit.plus)
 
 
 pygame.init()
+pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()
 
 screen = Screen(width = 320, height = 240)
@@ -48,6 +49,7 @@ vbutton = VButton(
 ball[1].move([160,160])    
 
 while not button_quit.cnt:    
+    print('ff')
     clock.tick(FPS) 
 
 
@@ -62,9 +64,10 @@ while not button_quit.cnt:
     screen.constrain(ball[0])
     screen.constrain(ball[1])
 
+            
 
-    for event in pygame.event.get():
-        print(event.type)
+    # for event in pygame.event.get():
+       
 
 
     screen.clear()
@@ -72,4 +75,23 @@ while not button_quit.cnt:
     screen << ball[1]
     screen << vbutton
     pygame.display.flip()        # display workspace on screen
+
+    pos = (0,0)       
+    for event in pygame.event.get():        
+        if(event.type is MOUSEBUTTONDOWN):            
+            pos = pygame.mouse.get_pos() 
+            print(event.type, " ")
+            print(pygame.mouse.get_pos()) 
+
+        elif(event.type is MOUSEBUTTONUP):            
+            pos = pygame.mouse.get_pos() 
+            x,y = pos
+            print(event.type, " ")
+            print(pygame.mouse.get_pos())
+
+        if (vbutton.rect.collidepoint(pos)):
+            button_quit.plus()
+            print(button_quit.cnt)
+    print(button_quit.cnt)
+
 
