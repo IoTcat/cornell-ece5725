@@ -27,7 +27,6 @@ os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
 
 
 button_quit = Button(27)
-banner = Text(text='i', position = [160,50])
 # timeout(30, button_quit.plus)
 
 
@@ -47,10 +46,11 @@ vbutton = VButton(
     size = (80, 40)
 )
 
+banner = Text(text='', position = [160,50])
+
 ball[1].move([160,160])    
 
 while not button_quit.cnt:    
-    print('ff')
     clock.tick(FPS) 
 
 
