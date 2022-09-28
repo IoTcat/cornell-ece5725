@@ -52,7 +52,9 @@ button_quit = VButton(
 button_panic = VButton(
     text = Text('stop'),
     position = screen%(50, 20),
-    size = (80, 40)
+    size = (80, 40),
+    color = (255,0,0)
+)
 
 banner = Text(text='', position = screen%[50,20])
 
@@ -79,7 +81,16 @@ while not (QUIT or all([b.status==0 for b in button])):
             if (button_quit.collidepoint(pos)):
                 QUIT = True
             if (button_panic.collidepoint(pos)):
-                pass
+                if button_panic.color == (255,0,0)
+                    button_panic.color = (0,255,0)
+                elif button_panic.color == (0,255,0)
+                    button_panic.color = (255,0,0)
+                button_panic.refresh()
+    
+
+
+
+                button_panic.refresh()
     
 
 
