@@ -1,5 +1,6 @@
 
 FPS = 100
+QUIT = False
 
 import os
 import sys
@@ -12,7 +13,6 @@ import numpy as np
 import pygame
 from pygame.locals import *   # for event MOUSE variables
 from screen import Screen
-from ball import Ball
 from button import Button
 from timeout import timeout
 from text import Text
@@ -23,10 +23,6 @@ os.putenv('SDL_FBDEV', '/dev/fb0')
 os.putenv('SDL_MOUSEDRV', 'TSLIB')
 os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
 
-
-
-b0.func = lambda b=b1:print('stop') if b.status==0 else print('17')
-b1.func = lambda b=b0:print('stop') if b.status==0 else print('22')
 
 motor = [
     Motor(IN1=5, IN2=6, PWM=26),
@@ -47,48 +43,27 @@ pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()
 
 screen = Screen(width = 320, height = 240)
-ball = [
-    Ball(speed = [2,2], radius = 50),
-    Ball(speed = [1,-2], radius = 20)
-]
 
-vbutton = VButton(
+button_quit = VButton(
     text = Text('quit'),
     position = screen%(50, 80),
     size = (80, 40)
 )
+button_panic = VButton(
+    text = Text('stop'),
+    position = screen%(50, 20),
+    size = (80, 40)
 
 banner = Text(text='', position = screen%[50,20])
 
-ball[1].move(screen%[50,50])    
-vbutton.enable = True
-while not button_quit.cnt:    
+while not (QUIT or all([b.status==0 for b in button])):    
     clock.tick(FPS) 
 
 
 
-    ball[0].move()
-    ball[1].move()
-
-    # If two ball overlap
-    if ball[0] - ball[1] < ball[0].radius + ball[1].radius:
-        # Do the collidsion
-        ball[0] ** ball[1]
-
-    screen.constrain(ball[0])
-    screen.constrain(ball[1])
-
-            
-
-    # for event in pygame.event.get():
-       
-
-
     screen.clear()
-    screen << ball[0]
-    screen << ball[1]
-    screen << banner
-    screen << vbutton
+    screen << button_quit
+    screen << button_panic
     pygame.display.flip()        # display workspace on screen
 
     pos = (0,0)       
@@ -101,9 +76,10 @@ while not button_quit.cnt:
             print(pygame.mouse.get_pos())
             banner.text = "touch at" + str(pos)
             banner.refresh()
-            if (vbutton.collidepoint(pos)):
-                #button_quit.plus()
-                ball[1].enable = not ball[1].enable
+            if (button_quit.collidepoint(pos)):
+                QUIT = True
+            if (button_panic.collidepoint(pos)):
+                pass
     
 
 
