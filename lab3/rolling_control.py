@@ -24,14 +24,22 @@ os.putenv('SDL_MOUSEDRV', 'TSLIB')
 os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
 
 
-b0 = Button(17)
-b1 = Button(22)
 
 b0.func = lambda b=b1:print('stop') if b.status==0 else print('17')
 b1.func = lambda b=b0:print('stop') if b.status==0 else print('22')
 
-button_quit = Button(27)
-timeout(30, button_quit.plus)
+motor = [
+    Motor(IN1=5, IN2=6, PWM=26),
+    Motor(IN1=20, IN2=21, PWM=16)
+]
+
+button = [Button(pin) for pin in [17, 22, 23, 27]]
+
+button[0].func = lambda motor=motor:motor[0].speed=0 if button[1].status==0 else motor[0].speed=100
+button[1].func = lambda motor=motor:motor[0].speed=0 if button[0].status==0 else motor[0].speed=-100
+button[2].func = lambda motor=motor:motor[1].speed=0 if button[3].status==0 else motor[1].speed=100
+button[3].func = lambda motor=motor:motor[1].speed=0 if button[2].status==0 else motor[1].speed=-100
+
 
 
 pygame.init()
