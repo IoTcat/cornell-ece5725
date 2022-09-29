@@ -1,9 +1,10 @@
 
 FPS = 100
-QUIT = False
+IS_QUIT = False
 
 import os
 import sys
+import time
 from turtle import position
 sys.path.append('modules/display')
 sys.path.append('modules/gpio')
@@ -14,6 +15,7 @@ import pygame
 from pygame.locals import *   # for event MOUSE variables
 from screen import Screen
 from button import Button
+from motor import Motor
 from timeout import timeout
 from text import Text
 from vbutton import VButton
@@ -23,24 +25,11 @@ os.putenv('SDL_FBDEV', '/dev/fb0')
 os.putenv('SDL_MOUSEDRV', 'TSLIB')
 os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
 
-
-motor = [
-    Motor(IN1=5, IN2=6, PWM=26),
-    Motor(IN1=20, IN2=21, PWM=16)
-]
-
-button = [Button(pin) for pin in [17, 22, 23, 27]]
-
-button[0].func = lambda motor=motor:motor[0].speed=0 if button[1].status==0 else motor[0].speed=100
-button[1].func = lambda motor=motor:motor[0].speed=0 if button[0].status==0 else motor[0].speed=-100
-button[2].func = lambda motor=motor:motor[1].speed=0 if button[3].status==0 else motor[1].speed=100
-button[3].func = lambda motor=motor:motor[1].speed=0 if button[2].status==0 else motor[1].speed=-100
-
-
-
 pygame.init()
 pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()
+
+from test_queue import Test_queue
 
 screen = Screen(width = 320, height = 240)
 
@@ -53,44 +42,72 @@ button_panic = VButton(
     text = Text('stop'),
     position = screen%(50, 20),
     size = (80, 40),
-    color = (255,0,0)
+    color = (255,0,0),
+    shape = 'ellipse'
 )
 
-banner = Text(text='', position = screen%[50,20])
+log_left = Test_queue(
+    title = Text('Left History'),
+    position = screen%(20,50)
+)
+log_right = Test_queue(
+    title = Text('Right History'),
+    position = screen%(80,50)
+)
 
-while not (QUIT or all([b.status==0 for b in button])):    
+def add_time(text, start_time = time.time()):
+    return text +' ' + str(int(time.time() - start_time))
+
+
+motor = [
+    Motor(IN1=5, IN2=6, PWM=26,
+        callback = lambda speed,log_left=log_left:log_left.push(Text(add_time('stop') if speed == 0 else add_time('clockwise') if speed > 0 else add_time('counter-clockwise'), size=15))
+    ),
+    Motor(IN1=20, IN2=21, PWM=16,
+        callback = lambda speed,log_right=log_right:log_right.push(Text(add_time('stop') if speed == 0 else add_time('clockwise') if speed > 0 else add_time('counter-clockwise'), size=15))
+    )
+]
+
+button = [Button(pin) for pin in [17, 22, 23, 27]]
+
+
+button[0].func = lambda motor=motor:motor[0].setSpeed(0) if button[1].status==0 else motor[0].setSpeed(100)
+button[1].func = lambda motor=motor:motor[0].setSpeed(0) if button[0].status==0 else motor[0].setSpeed(-100)
+button[2].func = lambda motor=motor:motor[1].setSpeed(0) if button[3].status==0 else motor[1].setSpeed(100)
+button[3].func = lambda motor=motor:motor[1].setSpeed(0) if button[2].status==0 else motor[1].setSpeed(-100)
+
+
+
+while not (IS_QUIT or all([b.status==0 for b in button])):    
     clock.tick(FPS) 
 
 
-
     screen.clear()
+    screen << log_left
+    screen << log_right
     screen << button_quit
     screen << button_panic
     pygame.display.flip()        # display workspace on screen
 
-    pos = (0,0)       
     for event in pygame.event.get():        
 
         if(event.type is MOUSEBUTTONUP):            
             pos = pygame.mouse.get_pos() 
-            x,y = pos
-            print(event.type, " ")
-            print(pygame.mouse.get_pos())
-            banner.text = "touch at" + str(pos)
-            banner.refresh()
             if (button_quit.collidepoint(pos)):
-                QUIT = True
+                IS_QUIT = True
             if (button_panic.collidepoint(pos)):
-                if button_panic.color == (255,0,0)
+                if button_panic.text.text == 'stop':
+                    [m.stop() for m in motor]
                     button_panic.color = (0,255,0)
-                elif button_panic.color == (0,255,0)
+                    button_panic.text = Text('resume')
+                elif button_panic.text.text == 'resume':
+                    [m.resume() for m in motor]
                     button_panic.color = (255,0,0)
+                    button_panic.text = Text('stop')
                 button_panic.refresh()
     
 
 
-
-                button_panic.refresh()
     
 
 

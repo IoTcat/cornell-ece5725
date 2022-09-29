@@ -10,11 +10,15 @@ class Motor():
         'PWM': 0
     }
     obj_pwm = None
-    def __init__(self, IN1, IN2, PWM, freq = 50):
+    callback = None
+    __speed = 0
+    __stop = False
+    def __init__(self, IN1, IN2, PWM, freq = 50, callback = lambda speed:None):
         self.PIN = {}
         self.PIN['IN1'] = IN1
         self.PIN['IN2'] = IN2
         self.PIN['PWM'] = PWM
+        self.callback = callback
         # gpio setup
         [GPIO.setup(pin, GPIO.OUT) for pin in self.PIN.values()] 
         # pwm setup
@@ -28,6 +32,8 @@ class Motor():
             self.__dict__[name] = value
 
     def setSpeed(self, value):
+        if self.__stop:
+            return
         if value > 0:
             GPIO.output(self.PIN['IN1'], GPIO.HIGH)
             GPIO.output(self.PIN['IN2'], GPIO.LOW)
@@ -35,3 +41,13 @@ class Motor():
             GPIO.output(self.PIN['IN1'], GPIO.LOW)
             GPIO.output(self.PIN['IN2'], GPIO.HIGH)
         self.pwm_obj.ChangeDutyCycle(abs(value))
+        self.callback(value)
+        self.__speed = value
+
+    def stop(self):
+        self.__stop = True
+        self.pwm_obj.ChangeDutyCycle(0)
+    def resume(self):
+        self.__stop = False
+        print(self.__speed)
+        self.pwm_obj.ChangeDutyCycle(abs(self.__speed))

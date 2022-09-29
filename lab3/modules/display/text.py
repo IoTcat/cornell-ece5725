@@ -7,9 +7,9 @@ from entity import Entity
 class Text(Entity):
     text = ''
     color = 255,255,255
-    size = 35
+    size = 25
     position = [0,0]
-    def __init__(self, text = 'default', color = (255,255,255), position = [0,0], size = 35, speed = [0,0]):
+    def __init__(self, text = 'default', color = (255,255,255), position = [0,0], size = 25, speed = [0,0]):
         self.speed = np.array(speed)
         self.text = text
         self.color = color
