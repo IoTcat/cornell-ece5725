@@ -1,21 +1,9 @@
 #!/usr/bin/env python3
 #
-# Script Name : video_control.py
+# Script Name : more_video_control_cb_perf.py
 # Created By  : Yimian Liu (yl996), Zhihui Liu (zl826)
 # Group Number: 7
-# Created Date: 9/7/2022
 # 
-"""Description:
-The Lab Code for ECE5725 Lab1 Week2 Step6.
-A python routine sending commands to mplayer when the corresponding 
-button on the PiTFT is pressed.
-"""
-"""Usage:
-Press the first PiTFT button to pause the mplayer.
-Press the second PiTFT button to fast forward 10 seconds for the video.
-Press the third PiTFT button to rewind 10 seconds for the video.
-Press the fourth PiTFT button to quit the mplayer and the routine.
-"""
 #
 import time
 t = time.time()
@@ -59,7 +47,6 @@ def cb(button):
         os.system('echo "quit" > test_fifo')
         GPIO.cleanup() # clean up GPIO on normal exit
         exit()
-
 
 for button in buttons:
     GPIO.setup(button, GPIO.IN, pull_up_down=GPIO.PUD_UP)

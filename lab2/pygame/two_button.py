@@ -1,4 +1,9 @@
-
+#!/usr/bin/env python3
+#
+# Script Name : two_bounce.py
+# Created By  : Yimian Liu (yl996), Zhihui Liu (zl826)
+# Group Number: 7
+# 
 FPS = 100
 
 import time

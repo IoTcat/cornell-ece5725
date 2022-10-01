@@ -1,3 +1,10 @@
+#!/usr/bin/env python3
+#
+# Script Name : six_buttons.py
+# Created By  : Yimian Liu (yl996), Zhihui Liu (zl826)
+# Group Number: 7
+# 
+#
 import RPi.GPIO as GPIO
 import time
 

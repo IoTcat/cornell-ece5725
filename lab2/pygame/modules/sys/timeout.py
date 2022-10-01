@@ -1,4 +1,6 @@
 from threading import Timer
 
 def timeout(t, cb):
-    Timer(t, cb).start()
+    t = Timer(t, cb)
+    t.daemon = True
+    t.start()

@@ -3,7 +3,6 @@
 # Script Name : start_video.sh
 # Created By  : Yimian Liu (yl996), Zhihui Liu (zl826)
 # Group Number: 7
-# Created Date: 9/7/2022
 #
 # Description: Start the python video_contro script
 # and launch the mplayer so that the buttons on the 

@@ -1,8 +1,12 @@
-
+#!/usr/bin/env python3
+#
+# Script Name : two_bounce.py
+# Created By  : Yimian Liu (yl996), Zhihui Liu (zl826)
+# Group Number: 7
+#
 FPS = 100
 
 import time
-START_TIME = time.time()
 
 import os
 import sys
@@ -27,54 +31,62 @@ os.putenv('SDL_FBDEV', '/dev/fb0')
 os.putenv('SDL_MOUSEDRV', 'TSLIB')
 os.putenv('SDL_MOUSEDEV', '/dev/input/touchscreen')
 
+# flag to control animation
 start_flag = False
 pause_flag = False
+
+# quit button
 button_quit = Button(27)
 
-# timeout(30, button_quit.plus)
+# timeout when 30s
+timeout(30, button_quit.plus)
 
 last_click_time = 0
 
 pygame.init()
 pygame.mouse.set_visible(False)
 clock = pygame.time.Clock()
+
+# create a banner from self-defined text classes
 banner = Text(text='', position = [160,50])
+# create a screen
 screen = Screen(width = 320, height = 240)
+# create two balls
 ball = [
     Ball(speed = [2,2], radius = 50),
     Ball(speed = [1,-2], radius = 20)
 ]
-
+# create a button for quit
 vbutton = VButton(
     text = Text('quit'),
     position = [100, 200],
     size = (80, 40)
 )
-
+# create a button for start
 vbutton2 = VButton(
     text = Text('start'),
     position = [200, 200],
     size = (80, 40)
 )
-
+# create a button for pause
 pause_button = VButton(
     text = Text('pause'),
     position = [30, 200],
     size = (60, 30)
 )
-
+# create a button for fast 
 fast_button = VButton(
     text = Text('fast'),
     position = [100, 200],
     size = (60, 30)
 )
-
+# create a button for slow down
 slow_button = VButton(
     text = Text('slow'),
     position = [170, 200],
     size = (60, 30)
 )
-
+# create a button for back to 
 back_button = VButton(
     text = Text('back'),
     position = [240, 200],
@@ -84,10 +96,10 @@ back_button = VButton(
 ball[1].move([160,160])    
 
 
-while not button_quit.cnt and time.time()<START_TIME+300:    
+while not button_quit.cnt:    
     clock.tick(FPS) 
 
-
+    # let ball move
     if not pause_flag and start_flag:
         ball[0].move()
         ball[1].move()
@@ -97,10 +109,10 @@ while not button_quit.cnt and time.time()<START_TIME+300:
         # Do the collidsion
         ball[0] ** ball[1]
 
+    # let balls bounce in the screen
     screen.constrain(ball[0])
     screen.constrain(ball[1])
        
-
 
     screen.clear()
     if start_flag:
@@ -115,8 +127,8 @@ while not button_quit.cnt and time.time()<START_TIME+300:
         screen << vbutton
         screen << vbutton2
 
+    # draw banner onto the screen
     screen << banner
-
     
     pygame.display.flip()        # display workspace on screen
 
@@ -146,15 +158,8 @@ while not button_quit.cnt and time.time()<START_TIME+300:
                 FPS = FPS + 50
             elif (slow_button.rect.collidepoint(pos) and start_flag == True):
                 FPS = max(FPS-50, 5)
-#                if ball.speed[0] >= 50:
-#                    ball.speed[0] = ball.speed[0] - 50
-#                if ball.speed[1] >= 50:
-#                    ball.speed[1] = ball.speed[1] - 50
             elif (back_button.rect.collidepoint(pos) and start_flag == True):
                 start_flag = False
                 FPS = 100
                 pause_flag = False
                 print('back')
-    
-
-

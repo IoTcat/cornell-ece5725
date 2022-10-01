@@ -1,21 +1,9 @@
 #!/usr/bin/env python3
 #
-# Script Name : video_control.py
+# Script Name : more_video_control.py
 # Created By  : Yimian Liu (yl996), Zhihui Liu (zl826)
 # Group Number: 7
-# Created Date: 9/7/2022
 # 
-"""Description:
-The Lab Code for ECE5725 Lab1 Week2 Step6.
-A python routine sending commands to mplayer when the corresponding 
-button on the PiTFT is pressed.
-"""
-"""Usage:
-Press the first PiTFT button to pause the mplayer.
-Press the second PiTFT button to fast forward 10 seconds for the video.
-Press the third PiTFT button to rewind 10 seconds for the video.
-Press the fourth PiTFT button to quit the mplayer and the routine.
-"""
 #
 # Import the RPi.GPIO module for interacting with 
 # RiP's GPIO
@@ -24,7 +12,6 @@ import RPi.GPIO as GPIO
 import time
 # import the standard os module to interact with shell
 import os
-
 
 # Declare the GPIOs that the button will use.
 buttons = [17, 22, 23, 27, 19, 26]
@@ -64,7 +51,6 @@ while True:
             if button == buttons[3]:
                 os.system('echo "quit" > test_fifo')
                 exit()
-
 
             if button == buttons[4]:
                 os.system('echo "seek 30" > test_fifo')
