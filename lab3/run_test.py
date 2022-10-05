@@ -2,6 +2,7 @@
 # Flags
 FPS = 100
 IS_QUIT = False
+IS_START = False
 
 # import system modules
 import os
@@ -101,9 +102,45 @@ button[1].func = lambda motor=motor:motor[0].setSpeed(0) if button[0].status==0 
 button[2].func = lambda motor=motor:motor[1].setSpeed(0) if button[3].status==0 else motor[1].setSpeed(100)
 button[3].func = lambda motor=motor:motor[1].setSpeed(0) if button[2].status==0 else motor[1].setSpeed(-100)
 
+cnt = 0
+unit = 300
+
+
 # while QUIT flag not set and not all four physical buttons are pressed at the same time
 while not (IS_QUIT or all([b.status==0 for b in button])):    
     clock.tick(FPS) 
+
+
+
+    if IS_START:
+        cnt += 1
+        if cnt < 1*unit:
+            motor[0].speed = 50
+            motor[1].speed = 50
+        elif cnt < 2*unit:
+            motor[0].speed = 0
+            motor[1].speed = 0
+        elif cnt < 3*unit:
+            motor[0].speed = -50
+            motor[1].speed = -50
+        elif cnt < 4*unit:
+            motor[0].speed = 50
+            motor[1].speed = 0
+        elif cnt < 5*unit:
+            motor[0].speed = 0
+            motor[1].speed = 0
+        elif cnt < 6*unit:
+            motor[0].speed = 0
+            motor[1].speed = 50
+        elif cnt < 7*unit:
+            motor[0].speed = 0
+            motor[1].speed = 0
+            cnt = 0
+
+
+
+
+
 
     # draw on the screen
     screen.clear()
@@ -121,16 +158,21 @@ while not (IS_QUIT or all([b.status==0 for b in button])):
             # when quit button is pressed
             if (button_quit.collidepoint(pos)):
                 IS_QUIT = True
+            if (button_start.collidepoint(pos)):
+                IS_START = True
+                button_start.enable = False
             # when panic button is pressed
             if (button_panic.collidepoint(pos)):
                 if button_panic.text.text == 'stop':
                     [m.stop() for m in motor]
                     button_panic.color = (0,255,0)
                     button_panic.text = Text('resume')
+                    IS_START = False
                 elif button_panic.text.text == 'resume':
                     [m.resume() for m in motor]
                     button_panic.color = (255,0,0)
                     button_panic.text = Text('stop')
+                    IS_START = True
                 button_panic.refresh()
     
 

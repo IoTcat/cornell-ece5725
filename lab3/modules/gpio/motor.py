@@ -32,6 +32,8 @@ class Motor():
             self.__dict__[name] = value
 
     def setSpeed(self, value):
+        if self.__speed != value:
+            self.callback(value)
         if self.__stop:
             return
         if value > 0:
@@ -41,7 +43,6 @@ class Motor():
             GPIO.output(self.PIN['IN1'], GPIO.LOW)
             GPIO.output(self.PIN['IN2'], GPIO.HIGH)
         self.pwm_obj.ChangeDutyCycle(abs(value))
-        self.callback(value)
         self.__speed = value
 
     def stop(self):
