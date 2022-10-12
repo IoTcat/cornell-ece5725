@@ -103,7 +103,7 @@ button[2].func = lambda motor=motor:motor[1].setSpeed(0) if button[3].status==0 
 button[3].func = lambda motor=motor:motor[1].setSpeed(0) if button[2].status==0 else motor[1].setSpeed(-100)
 
 cnt = 0
-unit = 300
+unit = 200
 
 
 # while QUIT flag not set and not all four physical buttons are pressed at the same time
