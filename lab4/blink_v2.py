@@ -17,15 +17,16 @@ GPIO.setmode(GPIO.BCM)   # Set for broadcom numbering not board numbers...
 GPIO.setup(26, GPIO.OUT) # set GPIO 13 as output to blink LED 
 
 i = 0
-interval = 0.0005
-frequency = (1/(2*interval))
+frequency = 500
+interval = 1/(2*frequency)
+
 print ("interval = " + str(interval) + " sec")
 print ("period = " + str(interval * 2) + " sec")
 print ("frequency = " + str(frequency) + " Hz")
 
 
 #while (i < 100000):
-while (i < (frequency + frequency) ): # remain in loop for a while
+while (i < (frequency + frequency) * 100 ): # remain in loop for a while
     GPIO.output(26, GPIO.HIGH)
     time.sleep(interval)
     GPIO.output(26, GPIO.LOW)
