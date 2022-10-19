@@ -1,4 +1,9 @@
-
+#!/usr/bin/env python3
+#
+# Script Name : run_test.py
+# Created By  : Yimian Liu (yl996), Zhihui Liu (zl826)
+# Group Number: 7
+# 
 # Flags
 FPS = 100
 IS_QUIT = False
@@ -103,14 +108,12 @@ button[2].func = lambda motor=motor:motor[1].setSpeed(0) if button[3].status==0 
 button[3].func = lambda motor=motor:motor[1].setSpeed(0) if button[2].status==0 else motor[1].setSpeed(-100)
 
 cnt = 0
-unit = 300
+unit = 200
 
 
 # while QUIT flag not set and not all four physical buttons are pressed at the same time
 while not (IS_QUIT or all([b.status==0 for b in button])):    
     clock.tick(FPS) 
-
-
 
     if IS_START:
         cnt += 1
@@ -136,10 +139,6 @@ while not (IS_QUIT or all([b.status==0 for b in button])):
             motor[0].speed = 0
             motor[1].speed = 0
             cnt = 0
-
-
-
-
 
 
     # draw on the screen
@@ -175,8 +174,3 @@ while not (IS_QUIT or all([b.status==0 for b in button])):
                     IS_START = True
                 button_panic.refresh()
     
-
-
-
-
-
