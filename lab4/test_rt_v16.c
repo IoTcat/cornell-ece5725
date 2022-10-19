@@ -38,13 +38,14 @@ void stack_prefault(void) {
 int main(int argc, char* argv[])
 {
         struct sched_param param;
-        int interval = 500000000; /* long delay */
+        int freq = 1;
+        int interval = 72000000 / freq; /* long delay */
         int PinValue = 0;  // used to toggle output pin
         int i;
 
 
        if ( argc>=2 && atoi(argv[1] ) >0 ) { // if positive argument
-          interval = atoi(argv[1]);
+          interval = 72000000 / atoi(argv[1]);
        }
        printf ( "Interval = %d loops\n", interval);
 
