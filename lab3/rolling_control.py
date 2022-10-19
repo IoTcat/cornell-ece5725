@@ -1,3 +1,9 @@
+#!/usr/bin/env python3
+#
+# Script Name : rolling_control.py
+# Created By  : Yimian Liu (yl996), Zhihui Liu (zl826)
+# Group Number: 7
+# 
 # Flags
 FPS = 100
 IS_QUIT = False
@@ -125,8 +131,3 @@ while not (IS_QUIT or all([b.status==0 for b in button])):
                     button_panic.text = Text('stop')
                 button_panic.refresh()
     
-
-
-
-
-
